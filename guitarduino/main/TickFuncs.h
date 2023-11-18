@@ -4,7 +4,7 @@ void Test() {
         Serial.print("\nTest");
 }
 
-enum SVNSEG_STATES {start, display_three, display_two, display_one, display_zero};
+enum SVNSEG_STATES {SVNSEG_start, display_three, display_two, display_one, display_zero};
 int A=29, B=30, C=27, D=24, E=25, F=28, G=26;
 int D1=34, D2=35, D3=33, D4=32;
 
@@ -21,7 +21,7 @@ Tick_SVNSEG(int state) {
     int num_to_display = 0;
 
     switch(state) {
-        case start:
+        case SVNSEG_start:
             state = display_three;
             break;
         case display_three:
@@ -37,11 +37,11 @@ Tick_SVNSEG(int state) {
             state = display_three;
             break;
         default:
-            state = start;
+            state = SVNSEG_start;
             break;
     }
     switch(state) {
-        case start:
+        case SVNSEG_start:
             break;
         case display_three:
             pin_to_display_on = display_pins[10];
@@ -76,3 +76,37 @@ Tick_SVNSEG(int state) {
     digitalWrite(pin_to_display_on, LOW);
     return state;
 }
+
+int buzzer_pin = A0;
+enum BUZZER_STATES {buzz_start, buzz_on, buzz_off};
+Tick_BUZZER(int state) {
+    switch(state) {
+        case buzz_start:
+            state = buzz_on;
+            break;
+        case buzz_on:
+            state = buzz_off;
+            break;
+        case buzz_off:
+            state = buzz_on;
+            break;
+        default:
+            state = buzz_start;
+            break;
+    }
+    switch(state) {
+        case buzz_start:
+            break;
+        case buzz_on:
+            tone(buzzer_pin, 783);
+            break;
+        case buzz_off:
+            noTone(buzzer_pin);
+            break;
+        default:
+            break;
+    }
+    return state;
+}
+
+int other_output_pins[] = {buzzer_pin};
