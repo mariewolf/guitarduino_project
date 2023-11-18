@@ -5,10 +5,10 @@ void Test() {
 }
 
 enum SVNSEG_STATES {SVNSEG_start, display_three, display_two, display_one, display_zero};
-int A=29, B=30, C=27, D=24, E=25, F=28, G=26;
-int D1=34, D2=35, D3=33, D4=32;
+int pin_A=29, pin_B=30, pin_C=27, pin_D=24, pin_E=25, pin_F=28, pin_G=26;
+int pin_D1=34, pin_D2=35, pin_D3=33, pin_D4=32;
 
-int display_pins[] = {A, B, C, D, E, F, G, D4, D3, D2, D1};
+int display_pins[] = {pin_A, pin_B, pin_C, pin_D, pin_E, pin_F, pin_G, pin_D4, pin_D3, pin_D2, pin_D1};
 Tick_SVNSEG(int state) {
     int count_parse = count;
     int thousands = count_parse / 1000; count_parse %= 1000;
@@ -79,6 +79,11 @@ Tick_SVNSEG(int state) {
 
 int buzzer_pin = A0;
 enum BUZZER_STATES {buzz_start, buzz_on, buzz_off};
+int C5 = 523, D5 = 587, E5 = 659, F5 = 698, G5 = 784, A5 = 880, B5 = 988;
+int C6 = 1047, D6 = 1175, E6 = 1319, F6 = 1397, G6 = 1568, A6 = 1760, B6 = 1976;
+int C7 = 2093, D7 = 2349, E7 = 2637, F7 = 2794, G7 = 3136, A7 = 3520, B7 = 3951;
+int C8 = 4186, D8 = 4699, E8 = 5274, F8 = 5588, G8 = 6272, A8 = 7040, B8 = 7902;
+
 Tick_BUZZER(int state) {
     switch(state) {
         case buzz_start:
@@ -98,7 +103,7 @@ Tick_BUZZER(int state) {
         case buzz_start:
             break;
         case buzz_on:
-            tone(buzzer_pin, 783);
+            tone(buzzer_pin, E7);
             break;
         case buzz_off:
             noTone(buzzer_pin);
