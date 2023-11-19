@@ -1,7 +1,7 @@
 #include "Timer.h"
 #include "TickFuncs.h"
 
-int globalPeriod = 5;
+int globalPeriod = 2;
 
 typedef struct task {
   int (*func)(int);  //function pointer
@@ -10,7 +10,7 @@ typedef struct task {
   int state = 0;          //current state
 } task;
 
-const int num_tasks = 4;
+const int num_tasks = 5;
 task tasks[num_tasks];
 
 void setup() {
@@ -39,12 +39,16 @@ void setup() {
   tasks[1].elapsedTime = tasks[1].period;
 
   tasks[2].func = &Tick_BUZZER;
-  tasks[2].period = 150;
+  tasks[2].period = 250;
   tasks[2].elapsedTime = tasks[2].period;
   
   tasks[3].func = &Tick_LED_MATRIX;
-  tasks[3].period = 500;
+  tasks[3].period = 2;
   tasks[3].elapsedTime = tasks[3].period;
+
+  tasks[4].func = &Tick_LED_ROW_CONTROL;
+  tasks[4].period = 200;
+  tasks[4].elapsedTime = 0;
 
 }
 
