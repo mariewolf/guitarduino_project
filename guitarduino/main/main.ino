@@ -10,7 +10,7 @@ typedef struct task {
   int state = 0;          //current state
 } task;
 
-const int num_tasks = 3;
+const int num_tasks = 4;
 task tasks[num_tasks];
 
 void setup() {
@@ -24,6 +24,11 @@ void setup() {
   for (auto x : other_output_pins)
       pinMode(x, OUTPUT);
 
+  for (auto x : LED_ROWS)
+      digitalWrite(x, LOW);
+  
+  for (auto x : LED_COLS)
+      digitalWrite(x, HIGH);
   //initialize first task
   tasks[0].func = &Test;
   tasks[0].period = 1000;
@@ -32,15 +37,15 @@ void setup() {
   tasks[1].func = &Tick_SVNSEG;
   tasks[1].period = 5;
   tasks[1].elapsedTime = tasks[1].period;
-  digitalWrite(D1, HIGH);
-  digitalWrite(D2, HIGH);
-  digitalWrite(D3, HIGH);
-  digitalWrite(D4, HIGH);
 
   tasks[2].func = &Tick_BUZZER;
   tasks[2].period = 150;
   tasks[2].elapsedTime = tasks[2].period;
-  //analogWrite(buzzer_pin, 1000);
+  
+  tasks[3].func = &Tick_LED_MATRIX;
+  tasks[3].period = 500;
+  tasks[3].elapsedTime = tasks[3].period;
+
 }
 
 void loop() {

@@ -79,10 +79,10 @@ Tick_SVNSEG(int state) {
 
 int buzzer_pin = A0;
 enum BUZZER_STATES {buzz_start, buzz_on, buzz_off};
-int C5 = 523, D5 = 587, E5 = 659, F5 = 698, G5 = 784, A5 = 880, B5 = 988;
-int C6 = 1047, D6 = 1175, E6 = 1319, F6 = 1397, G6 = 1568, A6 = 1760, B6 = 1976;
-int C7 = 2093, D7 = 2349, E7 = 2637, F7 = 2794, G7 = 3136, A7 = 3520, B7 = 3951;
-int C8 = 4186, D8 = 4699, E8 = 5274, F8 = 5588, G8 = 6272, A8 = 7040, B8 = 7902;
+int C5 = 523, D5 = 587, E5 = 659, F5 = 698, G5 = 784, note_A5 = 880, B5 = 988;
+int C6 = 1047, D6 = 1175, E6 = 1319, F6 = 1397, G6 = 1568, note_A6 = 1760, B6 = 1976;
+int C7 = 2093, D7 = 2349, E7 = 2637, F7 = 2794, G7 = 3136, note_A7 = 3520, B7 = 3951;
+int C8 = 4186, D8 = 4699, E8 = 5274, F8 = 5588, G8 = 6272, note_A8 = 7040, B8 = 7902;
 
 Tick_BUZZER(int state) {
     switch(state) {
@@ -114,4 +114,37 @@ Tick_BUZZER(int state) {
     return state;
 }
 
-int other_output_pins[] = {buzzer_pin};
+int row_1_pin = 11, row_2_pin = 7, row_3_pin = 12, row_4_pin = 9, row_5_pin = 4, row_6_pin = 37, row_7_pin = 6, row_8_pin = 36;
+int col_1_pin = 8, col_2_pin = 2, col_3_pin = 3, col_4_pin = 10, col_5_pin = 5;
+
+enum LED_MATRIX_STATES {LED_MATRIX_start, LED_MATRIX_display};
+Tick_LED_MATRIX(int state) {
+    switch(state) {
+        case LED_MATRIX_start:
+            state = LED_MATRIX_display;
+            break;
+        case LED_MATRIX_display:
+            state = LED_MATRIX_display;
+            break;
+        default:
+            state = LED_MATRIX_start;
+            break;
+    }
+    switch(state) {
+        case LED_MATRIX_start:
+            break;
+        case LED_MATRIX_display:
+            digitalWrite(row_3_pin, HIGH); //turning rows to HIGH turns them on?
+            //digitalWrite(row_1_pin, HIGH);
+
+            digitalWrite(col_2_pin, LOW); //turning cols to HIGH turns them off?
+            break;
+        default:
+            break;
+    }
+    return state;
+}
+
+int other_output_pins[] = {buzzer_pin, row_6_pin, row_8_pin, col_2_pin, col_3_pin, row_5_pin, col_5_pin, row_7_pin, row_2_pin, col_1_pin, row_4_pin, col_4_pin, row_1_pin, row_3_pin};
+int LED_ROWS[] = {row_1_pin, row_2_pin, row_3_pin, row_4_pin, row_5_pin, row_6_pin, row_7_pin, row_8_pin};
+int LED_COLS[] = {col_1_pin, col_2_pin, col_3_pin, col_4_pin, col_5_pin};
