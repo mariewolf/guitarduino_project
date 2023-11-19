@@ -1,5 +1,6 @@
 #include "Timer.h"
 #include "TickFuncs.h"
+//#include "SongArrays.h"
 
 int globalPeriod = 2;
 
@@ -39,7 +40,7 @@ void setup() {
   tasks[1].elapsedTime = tasks[1].period;
 
   tasks[2].func = &Tick_BUZZER;
-  tasks[2].period = 250;
+  tasks[2].period = 150;
   tasks[2].elapsedTime = tasks[2].period;
   
   tasks[3].func = &Tick_LED_MATRIX;
@@ -47,7 +48,7 @@ void setup() {
   tasks[3].elapsedTime = tasks[3].period;
 
   tasks[4].func = &Tick_LED_ROW_CONTROL;
-  tasks[4].period = 200;
+  tasks[4].period = 150;
   tasks[4].elapsedTime = 0;
 
 }

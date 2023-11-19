@@ -1,6 +1,7 @@
-using namespace std;
+#include "SongArrays.h"
 
 int count = 0;
+bool correct_press = false;
 
 void Test() {
         Serial.print("\nTest");
@@ -11,7 +12,7 @@ int pin_A=29, pin_B=30, pin_C=27, pin_D=24, pin_E=25, pin_F=28, pin_G=26;
 int pin_D1=34, pin_D2=35, pin_D3=33, pin_D4=32;
 
 int display_pins[] = {pin_A, pin_B, pin_C, pin_D, pin_E, pin_F, pin_G, pin_D4, pin_D3, pin_D2, pin_D1};
-Tick_SVNSEG(int state) {
+int Tick_SVNSEG(int state) {
     int count_parse = count;
     int thousands = count_parse / 1000; count_parse %= 1000;
     int hundreds = count_parse / 100; count_parse %= 100;
@@ -81,21 +82,18 @@ Tick_SVNSEG(int state) {
 
 int buzzer_pin = A0;
 enum BUZZER_STATES {buzz_start, buzz_on, buzz_off};
-int C5 = 523, D5 = 587, E5 = 659, F5 = 698, G5 = 784, note_A5 = 880, B5 = 988;
-int C6 = 1047, D6 = 1175, E6 = 1319, F6 = 1397, G6 = 1568, note_A6 = 1760, B6 = 1976;
-int C7 = 2093, D7 = 2349, E7 = 2637, F7 = 2794, G7 = 3136, note_A7 = 3520, B7 = 3951;
-int C8 = 4186, D8 = 4699, E8 = 5274, F8 = 5588, G8 = 6272, note_A8 = 7040, B8 = 7902;
 
-Tick_BUZZER(int state) {
+int Tick_BUZZER(int state) {
+    static int where_to_start = 0;
     switch(state) {
         case buzz_start:
             state = buzz_on;
             break;
         case buzz_on:
-            state = buzz_off;
+            state = buzz_on;
             break;
         case buzz_off:
-            state = buzz_on;
+            state = buzz_off;
             break;
         default:
             state = buzz_start;
@@ -105,7 +103,13 @@ Tick_BUZZER(int state) {
         case buzz_start:
             break;
         case buzz_on:
-            tone(buzzer_pin, B6);
+            if (correct_press)
+              tone(buzzer_pin, tetris_buzzer_1[where_to_start]);
+            else
+              noTone(buzzer_pin);
+            where_to_start++;
+            if (where_to_start == sizeof(tetris_buzzer_1)/sizeof(tetris_buzzer_1[0]))
+                state = buzz_off;
             break;
         case buzz_off:
             noTone(buzzer_pin);
@@ -118,29 +122,64 @@ Tick_BUZZER(int state) {
 
 int row_1_pin = 11, row_2_pin = 7, row_3_pin = 12, row_4_pin = 9, row_5_pin = 4, row_6_pin = 37, row_7_pin = 6, row_8_pin = 36;
 int col_1_pin = 8, col_2_pin = 2, col_3_pin = 3, col_4_pin = 10, col_5_pin = 5;
+int buttons[] = {A1, A2, A3, A4, A5, -1};
 
 void display_on_LED_matrix(int row, int col);
 int next_row_in[] = {0,0,0,0,0};
-int first_row[] =   {1,1,1,1,1};
+int first_row[] =   {0,0,0,0,0};
 int second_row[] =  {0,0,0,0,0};
-int third_row[] =   {0,1,0,0,0};
+int third_row[] =   {0,0,0,0,0};
 int fourth_row[] =  {0,0,0,0,0};
-int fifth_row[] =   {0,0,0,1,1};
+int fifth_row[] =   {0,0,0,0,0};
 int sixth_row[] =   {0,0,0,0,0};
 int seventh_row[] = {0,0,0,0,0};
 int eighth_row[] =  {0,0,0,0,0};
 
-enum LED_ROW_CONTROL {LED_ROW_CONTROL_start, shift_down};
+enum LED_ROW_CONTROL {LED_ROW_CONTROL_start, shift_down, leds_off};
 int LED_ROWS[] = {row_1_pin, row_2_pin, row_3_pin, row_4_pin, row_5_pin, row_6_pin, row_7_pin, row_8_pin};
 int LED_COLS[] = {col_1_pin, col_2_pin, col_3_pin, col_4_pin, col_5_pin};
+int check_button_press(int pin);
 
-Tick_LED_ROW_CONTROL(int state) {
+int Tick_LED_ROW_CONTROL(int state) {
+    static int where_to_start = 0;
+
+    static int corr_button = 5;
+    static int last_corr_button = corr_button;
+    for (int i = 0; i < 5; i++) {
+        if (eighth_row[i]) {
+            corr_button = i;
+            break;
+        }
+    }
+    if (corr_button != last_corr_button) {
+        last_corr_button = corr_button;
+        if (!corr_button && check_button_press(0) ||
+            (corr_button == 1 && check_button_press(1)) ||
+            (corr_button == 2 && check_button_press(2)) ||
+            (corr_button == 3 && check_button_press(3)) ||
+            (corr_button == 4 && check_button_press(4))) {
+            count += 5;
+            correct_press = true;
+            }
+    }
+
+    int row_parse = tetris_rythm[where_to_start];
+    next_row_in[0] = row_parse / 10000; row_parse %= 10000;
+    next_row_in[1] = row_parse / 1000; row_parse %= 1000;
+    next_row_in[2] = row_parse / 100; row_parse %= 100;
+    next_row_in[3] = row_parse / 10; row_parse %= 10;
+    next_row_in[4] = row_parse;
+
+
     switch(state) {
         case LED_ROW_CONTROL_start:
             state = shift_down;
             break;
         case shift_down:
             state = shift_down;
+            break;
+        case leds_off:
+            state = leds_off;
             break;
         default:
             state = LED_ROW_CONTROL_start;
@@ -161,16 +200,31 @@ Tick_LED_ROW_CONTROL(int state) {
                 }
                 for (int i = 0; i < 5; i++)
                    first_row[i] = next_row_in[i];
+                where_to_start++;
+
+                    Serial.print(next_row_in[0]);
+                    Serial.print(next_row_in[1]);
+                    Serial.print(next_row_in[2]);
+                    Serial.print(next_row_in[3]);
+                    Serial.print(next_row_in[4]);
+                    Serial.print("\n");
+
+
             break;
+        case leds_off:
+            for (int i = 0; i < 5; i++)
+                   first_row[i] = 0;
         default:
             break;
     }
-    Serial.print("shifting...\n");
+    if (where_to_start == sizeof(tetris_rythm)/sizeof(tetris_rythm[0])) {
+        state = leds_off;
+    }
     return state;
 }
 
 enum LED_MATRIX_STATES {LED_MATRIX_start, LED_ROW_1, LED_ROW_2, LED_ROW_3, LED_ROW_4, LED_ROW_5, LED_ROW_6, LED_ROW_7, LED_ROW_8};
-Tick_LED_MATRIX(int state) {
+int Tick_LED_MATRIX(int state) {
     for (auto x : LED_ROWS)
       digitalWrite(x, LOW);
   
@@ -217,7 +271,6 @@ Tick_LED_MATRIX(int state) {
                 if (first_row[i])
                     display_on_LED_matrix(1, i);
             }
-            //Serial.print("Case LED_ROW_1\n");
             break;
         case LED_ROW_2:
             for (int i = 0; i < 5; i++) {
@@ -261,10 +314,17 @@ Tick_LED_MATRIX(int state) {
                     display_on_LED_matrix(8, i);
             }
             break;
+            
         default:
             break;
     }
     return state;
+}
+
+int check_button_press(int pin) {
+    if (digitalRead(pin) == HIGH)
+        return 1;
+    return 0;
 }
 
 int other_output_pins[] = {buzzer_pin, row_6_pin, row_8_pin, col_2_pin, col_3_pin, row_5_pin, col_5_pin, row_7_pin, row_2_pin, col_1_pin, row_4_pin, col_4_pin, row_1_pin, row_3_pin};
