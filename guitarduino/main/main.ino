@@ -11,7 +11,7 @@ typedef struct task {
   int state = 0;          //current state
 } task;
 
-const int num_tasks = 5;
+const int num_tasks = 4;
 task tasks[num_tasks];
 
 void setup() {
@@ -25,31 +25,44 @@ void setup() {
   for (auto x : other_output_pins)
       pinMode(x, OUTPUT);
 
-  for (auto x : LED_ROWS)
-      digitalWrite(x, LOW);
+  // for (auto x : LED_ROWS)
+  //     digitalWrite(x, LOW);
   
-  for (auto x : LED_COLS)
-      digitalWrite(x, HIGH);
+  // for (auto x : LED_COLS)
+  //     digitalWrite(x, HIGH);
+
+    for (auto x : buttons)
+      pinMode(x, INPUT);
+
+  lc.shutdown(0,false);
+  lc.shutdown(1,false);
+  // Set brightness to a medium value
+  lc.setIntensity(0,1);
+  lc.setIntensity(1,1);
+  // Clear the display
+  lc.clearDisplay(0);  
+  lc.clearDisplay(1);  
+
   //initialize first task
   tasks[0].func = &Test;
   tasks[0].period = 1000;
   tasks[0].elapsedTime = tasks[0].period;
 
   tasks[1].func = &Tick_SVNSEG;
-  tasks[1].period = 5;
+  tasks[1].period = 2;
   tasks[1].elapsedTime = tasks[1].period;
 
   tasks[2].func = &Tick_BUZZER;
-  tasks[2].period = 150;
+  tasks[2].period = 125;
   tasks[2].elapsedTime = tasks[2].period;
   
-  tasks[3].func = &Tick_LED_MATRIX;
-  tasks[3].period = 2;
-  tasks[3].elapsedTime = tasks[3].period;
+  // tasks[3].func = &Tick_LED_MATRIX;
+  // tasks[3].period = 2;
+  // tasks[3].elapsedTime = tasks[3].period;
 
-  tasks[4].func = &Tick_LED_ROW_CONTROL;
-  tasks[4].period = 150;
-  tasks[4].elapsedTime = 0;
+  tasks[3].func = &Tick_LED_ROW_CONTROL;
+  tasks[3].period = 125;
+  tasks[3].elapsedTime = 0;
 
 }
 
