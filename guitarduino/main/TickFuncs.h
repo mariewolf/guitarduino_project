@@ -190,6 +190,9 @@ int Tick_LED_ROW_CONTROL(int state) {
              count +=5;
             correct_press = true;
             }
+            // else { // setting the correct press to false will make the buzzer not play
+            //     correct_press = false;
+            // }
     }
 
     int row_parse = tetris_rythm[where_to_start];
