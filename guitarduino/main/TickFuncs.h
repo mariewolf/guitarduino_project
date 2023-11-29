@@ -2,7 +2,7 @@
 #include "LedControl.h"
 #include "binary.h"
 
-int count = 0;
+int count = 65;
 bool correct_press = true;
 
 void Test() {
@@ -139,8 +139,6 @@ byte LEDrows[16] = {B00000000, B00000000, B00000000, B00000000, B00000000, B0000
                 B00000000, B00000000, B00000000, B00000000, B00000000, B00000000, B00000000, B00000000};
 
 enum LED_ROW_CONTROL {LED_ROW_CONTROL_start, shift_down, leds_off};
-//int LED_ROWS[] = {row_1_pin, row_2_pin, row_3_pin, row_4_pin, row_5_pin, row_6_pin, row_7_pin, row_8_pin};
-//int LED_COLS[] = {col_1_pin, col_2_pin, col_3_pin, col_4_pin, col_5_pin};
 int latchPin = 39;
 int clockPin = 41;
 int dataPin = 37;
@@ -173,11 +171,6 @@ int Tick_LED_ROW_CONTROL(int state) {
     // }
 
     int row_parse = tetris_rythm[where_to_start];
-    // next_row_in[0] = row_parse / 10000; row_parse %= 10000;
-    // next_row_in[1] = row_parse / 1000; row_parse %= 1000;
-    // next_row_in[2] = row_parse / 100; row_parse %= 100;
-    // next_row_in[3] = row_parse / 10; row_parse %= 10;
-    // next_row_in[4] = row_parse;
     next_row_in = row_parse;
 
 
@@ -202,19 +195,8 @@ int Tick_LED_ROW_CONTROL(int state) {
                 for (int i = 15; i > 0; i--) {
                     LEDrows[i] = LEDrows[i-1];
                 }
-                // for (int i = 0; i < 5; i++)
-                //    first_row[i] = next_row_in[i];
                 LEDrows[0] = next_row_in;
                 where_to_start++;
-
-                    // Serial.print(next_row_in[0]);
-                    // Serial.print(next_row_in[1]);
-                    // Serial.print(next_row_in[2]);
-                    // Serial.print(next_row_in[3]);
-                    // Serial.print(next_row_in[4]);
-                    // Serial.print("\n");
-
-
             break;
         case leds_off:
             // for (int i = 0; i < 5; i++)
@@ -248,103 +230,6 @@ int Tick_LED_ROW_CONTROL(int state) {
     return state;
 }
 
-// enum LED_MATRIX_STATES {LED_MATRIX_start, LED_ROW_1, LED_ROW_2, LED_ROW_3, LED_ROW_4, LED_ROW_5, LED_ROW_6, LED_ROW_7, LED_ROW_8};
-// int Tick_LED_MATRIX(int state) {
-//     for (auto x : LED_ROWS)
-//       digitalWrite(x, LOW);
-  
-//     for (auto x : LED_COLS)
-//       digitalWrite(x, HIGH);
-
-//     switch(state) {
-//         case LED_MATRIX_start:
-//             state = LED_ROW_1;
-//             break;
-//         case LED_ROW_1:
-//             state = LED_ROW_2;
-//             break;
-//         case LED_ROW_2:
-//             state = LED_ROW_3;
-//             break;
-//         case LED_ROW_3:
-//             state = LED_ROW_4;
-//             break;
-//         case LED_ROW_4:
-//             state = LED_ROW_5;
-//             break;
-//         case LED_ROW_5:
-//             state = LED_ROW_6;
-//             break;
-//         case LED_ROW_6:
-//             state = LED_ROW_7;
-//             break;
-//         case LED_ROW_7:
-//             state = LED_ROW_8;
-//             break;
-//         case LED_ROW_8:
-//             state = LED_ROW_1;
-//             break;
-//         default:
-//             state = LED_MATRIX_start;
-//             break;
-//     }
-//     switch(state) {
-//         case LED_MATRIX_start:
-//             break;
-//         case LED_ROW_1:
-//             for (int i = 0; i < 5; i++) {
-//                 if (first_row[i])
-//                     display_on_LED_matrix(1, i);
-//             }
-//             break;
-//         case LED_ROW_2:
-//             for (int i = 0; i < 5; i++) {
-//                 if (second_row[i])
-//                     display_on_LED_matrix(2, i);
-//             }
-//             break;
-//         case LED_ROW_3:
-//             for (int i = 0; i < 5; i++) {
-//                 if (third_row[i])
-//                     display_on_LED_matrix(3, i);
-//             }
-//             break;
-//         case LED_ROW_4:
-//             for (int i = 0; i < 5; i++) {
-//                 if (fourth_row[i])
-//                     display_on_LED_matrix(4, i);
-//             }
-//             break;
-//         case LED_ROW_5:
-//             for (int i = 0; i < 5; i++) {
-//                 if (fifth_row[i])
-//                     display_on_LED_matrix(5, i);
-//             }
-//             break;
-//         case LED_ROW_6:
-//             for (int i = 0; i < 5; i++) {
-//                 if (sixth_row[i])
-//                     display_on_LED_matrix(6, i);
-//             }
-//             break;
-//         case LED_ROW_7:
-//             for (int i = 0; i < 5; i++) {
-//                 if (seventh_row[i])
-//                     display_on_LED_matrix(7, i);
-//             }
-//             break;
-//         case LED_ROW_8:
-//             for (int i = 0; i < 5; i++) {
-//                 if (eighth_row[i])
-//                     display_on_LED_matrix(8, i);
-//             }
-//             break;
-            
-//         default:
-//             break;
-//     }
-//     return state;
-// }
 
 int check_button_press(int pin) {
     if (digitalRead(buttons[pin]) == HIGH)
@@ -353,8 +238,3 @@ int check_button_press(int pin) {
 }
 
 int other_output_pins[] = {buzzer_pin, buzzer2_pin, row_6_pin, row_8_pin, col_2_pin, col_3_pin, row_5_pin, col_5_pin, row_7_pin, row_2_pin, col_1_pin, row_4_pin, col_4_pin, row_1_pin, row_3_pin};
-
-// void display_on_LED_matrix(int row, int col) {
-//     digitalWrite(LED_ROWS[row-1], HIGH);
-//     digitalWrite(LED_COLS[col], LOW);
-// }

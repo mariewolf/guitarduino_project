@@ -25,12 +25,6 @@ void setup() {
   for (auto x : other_output_pins)
       pinMode(x, OUTPUT);
 
-  // for (auto x : LED_ROWS)
-  //     digitalWrite(x, LOW);
-  
-  // for (auto x : LED_COLS)
-  //     digitalWrite(x, HIGH);
-
     for (auto x : buttons)
       pinMode(x, INPUT);
 
@@ -55,10 +49,6 @@ void setup() {
   tasks[2].func = &Tick_BUZZER;
   tasks[2].period = 125;
   tasks[2].elapsedTime = tasks[2].period;
-  
-  // tasks[3].func = &Tick_LED_MATRIX;
-  // tasks[3].period = 2;
-  // tasks[3].elapsedTime = tasks[3].period;
 
   tasks[3].func = &Tick_LED_ROW_CONTROL;
   tasks[3].period = 125;
