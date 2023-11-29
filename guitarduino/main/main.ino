@@ -39,7 +39,7 @@ void setup() {
 
   //initialize first task
   tasks[0].func = &Test;
-  tasks[0].period = 1000;
+  tasks[0].period = 400;
   tasks[0].elapsedTime = tasks[0].period;
 
   tasks[1].func = &Tick_SVNSEG;

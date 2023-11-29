@@ -2,11 +2,26 @@
 #include "LedControl.h"
 #include "binary.h"
 
-int count = 65;
+int buttons[] = {A3, A4, A5, A7, -1};
+int check_button_press(int pin);
+
+int count = 0;
 bool correct_press = true;
 
 void Test() {
-        Serial.print("\nTest");
+        //int b1 = digitalRead(A3);
+        int b1 = check_button_press(3);
+        
+        //int b1 = digitalRead(check_button_press(buttons[0]));
+        //int b2 = digitalRead(check_button_press(buttons[1]));
+        //int b3 = digitalRead(check_button_press(buttons[2]));
+        //int b4 = digitalRead(check_button_press(buttons[3]));
+        Serial.print(b1);
+        // Serial.print("Button 1: "); Serial.print(b1); Serial.print("\t");
+        // Serial.print("Button 2: "); Serial.print(b2); Serial.print("\t");
+        // Serial.print("Button 3: "); Serial.print(b3); Serial.print("\t");
+        // Serial.print("Button 4: "); Serial.print(b4); Serial.print("\t");
+        Serial.print("\n");
 }
 
 enum SVNSEG_STATES {SVNSEG_start, display_three, display_two, display_one, display_zero};
@@ -130,7 +145,6 @@ int Tick_BUZZER(int state) {
 
 int row_1_pin = 11, row_2_pin = 13, row_3_pin = 12, row_4_pin = 9, row_5_pin = 4, row_6_pin = 37, row_7_pin = 6, row_8_pin = 36;
 int col_1_pin = 8, col_2_pin = 2, col_3_pin = 3, col_4_pin = 10, col_5_pin = 5;
-int buttons[] = {A1, A2, A3, A4, A5, -1};
 
 void display_on_LED_matrix(int row, int col);
 
@@ -145,30 +159,38 @@ int dataPin = 37;
 
 LedControl lc=LedControl(dataPin,clockPin,latchPin,2);
 
-int check_button_press(int pin);
 
 int Tick_LED_ROW_CONTROL(int state) {
     static int where_to_start = 0;
 
     static int corr_button = 2;
-    // static int last_corr_button = corr_button;
+    static int last_corr_button = corr_button;
     // for (int i = 0; i < 5; i++) {
-    //     if (eighth_row[i]) {
+    //     if (LEDrows[i]) {
     //         corr_button = i;
     //         break;
     //     }
     // }
-    // if (corr_button != last_corr_button) {
-    //     last_corr_button = corr_button;
-        if (corr_button && check_button_press(0) ||
+    if (LEDrows[15] == B00000011)
+        corr_button = 3;
+    else if (LEDrows[15] == B00001100)
+        corr_button = 2;
+    else if (LEDrows[15] == B00110000)
+        corr_button = 1;
+    else if (LEDrows[15] == B11000000)
+        corr_button = 0;
+    else if (LEDrows[15] == B00000000)
+        corr_button = 4;
+    if (corr_button != last_corr_button) {
+        last_corr_button = corr_button;
+        if (corr_button == 0 && check_button_press(0) ||
             (corr_button == 1 && check_button_press(1)) ||
             (corr_button == 2 && check_button_press(2)) ||
-            (corr_button == 3 && check_button_press(3)) ||
-            (corr_button == 4 && check_button_press(4))) //{
-             count +=0;
-    //         correct_press = true;
-    //         }
-    // }
+            (corr_button == 3 && check_button_press(3))) {
+             count +=5;
+            correct_press = true;
+            }
+    }
 
     int row_parse = tetris_rythm[where_to_start];
     next_row_in = row_parse;
@@ -232,9 +254,11 @@ int Tick_LED_ROW_CONTROL(int state) {
 
 
 int check_button_press(int pin) {
-    if (digitalRead(buttons[pin]) == HIGH)
-        return 1;
-    return 0;
+    if (pin == -1)
+        return 0;
+    if (digitalRead(buttons[pin]) != 0)
+        return 0;
+    return 1;
 }
 
 int other_output_pins[] = {buzzer_pin, buzzer2_pin, row_6_pin, row_8_pin, col_2_pin, col_3_pin, row_5_pin, col_5_pin, row_7_pin, row_2_pin, col_1_pin, row_4_pin, col_4_pin, row_1_pin, row_3_pin};
