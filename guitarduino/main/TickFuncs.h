@@ -1,12 +1,15 @@
 #include "SongArrays.h"
 #include "LedControl.h"
 #include "binary.h"
+#include <LiquidCrystal.h>
 
 int buttons[] = {A3, A4, A5, A7, -1};
 int check_button_press(int pin);
 
 int count = 0;
 bool correct_press = true;
+bool song_playing = false;
+bool ready_to_play = false;
 
 void Test() {
         //int b1 = digitalRead(A3);
@@ -105,7 +108,12 @@ int Tick_BUZZER(int state) {
     static int where_to_start = 0;
     switch(state) {
         case buzz_start:
-            state = buzz_on;
+            if (ready_to_play) {
+                state = buzz_on;
+            }
+            else {
+                state = buzz_start;
+            }
             break;
         case buzz_on:
             state = buzz_on;
@@ -121,6 +129,7 @@ int Tick_BUZZER(int state) {
         case buzz_start:
             break;
         case buzz_on:
+            song_playing = true;
             if (correct_press) {
               tone(buzzer_pin, tetris_buzzer_1[where_to_start]);
               tone(buzzer2_pin, tetris_buzzer_2[where_to_start]);
@@ -134,6 +143,7 @@ int Tick_BUZZER(int state) {
                 state = buzz_off;
             break;
         case buzz_off:
+            song_playing = false;
             noTone(buzzer_pin);
             noTone(buzzer2_pin);
             break;
@@ -165,12 +175,6 @@ int Tick_LED_ROW_CONTROL(int state) {
 
     static int corr_button = 2;
     static int last_corr_button = corr_button;
-    // for (int i = 0; i < 5; i++) {
-    //     if (LEDrows[i]) {
-    //         corr_button = i;
-    //         break;
-    //     }
-    // }
     if (LEDrows[15] == B00000011)
         corr_button = 3;
     else if (LEDrows[15] == B00001100)
@@ -201,7 +205,12 @@ int Tick_LED_ROW_CONTROL(int state) {
 
     switch(state) {
         case LED_ROW_CONTROL_start:
-            state = shift_down;
+            if (ready_to_play) {
+                state = shift_down;
+            }
+            else {
+                state = LED_ROW_CONTROL_start;
+            }
             break;
         case shift_down:
             state = shift_down;
@@ -224,8 +233,7 @@ int Tick_LED_ROW_CONTROL(int state) {
                 where_to_start++;
             break;
         case leds_off:
-            // for (int i = 0; i < 5; i++)
-                   LEDrows[0] = B00000000;
+                LEDrows[0] = B00000000;
         default:
             break;
     }
@@ -252,6 +260,70 @@ int Tick_LED_ROW_CONTROL(int state) {
     lc.setRow(1,6,B11111111);
     lc.setRow(1,7,LEDrows[15]);
 
+    return state;
+}
+
+const int rs = 45, en = 44, d4 = 47, d5 = 46, d6 = 49, d7 = 48;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+enum LCD_STATES {LCD_start, LCD_SONG, LCD_READY, LCD_SET, LCD_GO, LCD_GAME_OVER};
+int Tick_UPDATE_LCD(int state) {
+  lcd.clear();
+    switch(state) {
+        case LCD_start:
+            state = LCD_SONG;
+            break;
+        case LCD_SONG:
+            state = LCD_READY;
+            break;
+        case LCD_READY:
+            state = LCD_SET;
+            break;
+        case LCD_SET:
+            state = LCD_GO;
+            break;
+        case LCD_GO:
+            if (song_playing)
+                state = LCD_GO;
+            else
+                state = LCD_GAME_OVER;
+            break;
+        case LCD_GAME_OVER:
+            state = LCD_GAME_OVER;
+            break;
+        default:
+            state = LCD_start;
+            break;
+    }
+    switch(state) {
+        case LCD_start:
+            break;
+        case LCD_SONG:
+            lcd.setCursor(0, 0);
+            lcd.print("Song selected:");
+            lcd.setCursor(0, 1);
+            lcd.print("Tetris");
+            break;
+        case LCD_READY:
+            lcd.setCursor(0, 0);
+            lcd.print("Ready");
+            break;
+        case LCD_SET:
+            lcd.setCursor(0, 0);
+            lcd.print("Set");
+            break;
+        case LCD_GO:
+            lcd.setCursor(0, 0);
+            lcd.print("Go!");
+            ready_to_play = true;
+            break;
+        case LCD_GAME_OVER:
+            lcd.setCursor(0, 0);
+            lcd.print("Game Over");
+            ready_to_play = false;
+            break;
+        default:
+            break;
+    }
     return state;
 }
 

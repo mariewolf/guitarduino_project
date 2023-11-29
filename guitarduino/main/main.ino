@@ -11,7 +11,7 @@ typedef struct task {
   int state = 0;          //current state
 } task;
 
-const int num_tasks = 4;
+const int num_tasks = 5;
 task tasks[num_tasks];
 
 void setup() {
@@ -37,6 +37,10 @@ void setup() {
   lc.clearDisplay(0);  
   lc.clearDisplay(1);  
 
+  lcd.begin(16, 2);
+  lcd.clear();
+  //lcd.blink();
+
   //initialize first task
   tasks[0].func = &Test;
   tasks[0].period = 400;
@@ -53,6 +57,10 @@ void setup() {
   tasks[3].func = &Tick_LED_ROW_CONTROL;
   tasks[3].period = 125;
   tasks[3].elapsedTime = 0;
+
+  tasks[4].func = &Tick_UPDATE_LCD;
+  tasks[4].period = 1000;
+  tasks[4].elapsedTime = tasks[4].period;
 
 }
 
