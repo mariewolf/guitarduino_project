@@ -163,9 +163,9 @@ byte LEDrows[16] = {B00000000, B00000000, B00000000, B00000000, B00000000, B0000
                 B00000000, B00000000, B00000000, B00000000, B00000000, B00000000, B00000000, B00000000};
 
 enum LED_ROW_CONTROL {LED_ROW_CONTROL_start, shift_down, leds_off};
-int latchPin = 39;
-int clockPin = 41;
-int dataPin = 37;
+int latchPin = 12;
+int clockPin = 11;
+int dataPin = 13;
 
 LedControl lc=LedControl(dataPin,clockPin,latchPin,2);
 
