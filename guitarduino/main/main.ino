@@ -1,6 +1,8 @@
 #include "Timer.h"
-#include "TickFuncs.h"
-//#include "SongArrays.h"
+#include "tick-functions/tick_buzzer.cpp"
+#include "tick-functions/tick_LEDcontrol.cpp"
+#include "tick-functions/tick_svnseg.cpp"
+#include "tick-functions/tick_updateLCD.cpp"
 
 int globalPeriod = 2;
 
@@ -22,7 +24,7 @@ void setup() {
   for (auto x : display_pins)
       pinMode(x, OUTPUT);
   
-  for (auto x : other_output_pins)
+  for (auto x : buzzer_pins)
       pinMode(x, OUTPUT);
 
     for (auto x : buttons)
