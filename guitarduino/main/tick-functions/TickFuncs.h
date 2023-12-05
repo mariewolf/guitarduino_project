@@ -1,8 +1,9 @@
-#ifndef TICKFUNCS_H
-#define TICKFUNCS_H
+#ifndef TICKFUNCS_CPP
+#define TICKFUNCS_CPP
 
 #include "binary.h"
 #include "Arduino.h"
+#include "../SongArrays.h"
 
 int buttons[] = {A3, A4, A5, A7, -1};
 int check_button_press(int pin);
@@ -11,6 +12,10 @@ int count = 0;
 bool correct_press = true;
 bool song_playing = false;
 bool ready_to_play = false;
+bool game_over = true;
+int selectedSong = 0;
+int* songNotes = song_0_notes;
+int* songRythm = song_0_rythm;
 
 void Test() {
         //int b1 = digitalRead(A3);
@@ -27,8 +32,5 @@ void Test() {
         // Serial.print("Button 4: "); Serial.print(b4); Serial.print("\t");
         Serial.print("\n");
 }
-
-//int row_1_pin = 11, row_2_pin = 13, row_3_pin = 12, row_4_pin = 9, row_5_pin = 4, row_6_pin = 37, row_7_pin = 6, row_8_pin = 36;
-//int col_1_pin = 8, col_2_pin = 2, col_3_pin = 3, col_4_pin = 10, col_5_pin = 5;
 
 #endif

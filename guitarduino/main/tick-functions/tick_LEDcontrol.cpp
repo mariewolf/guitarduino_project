@@ -1,5 +1,5 @@
-#ifndef TICK_LED_CONTROL_H
-#define TICK_LED_CONTROL_H
+#ifndef TICK_LED_CONTROL_CPP
+#define TICK_LED_CONTROL_CPP
 
 #include "TickFuncs.h"
 #include "../SongArrays.h"
@@ -48,7 +48,7 @@ int Tick_LED_ROW_CONTROL(int state) {
             // }
     }
 
-    int row_parse = tetris_rythm[where_to_start];
+    int row_parse = songRythm[where_to_start];
     next_row_in = row_parse;
 
 
@@ -86,7 +86,7 @@ int Tick_LED_ROW_CONTROL(int state) {
         default:
             break;
     }
-    if (where_to_start == sizeof(tetris_rythm)/sizeof(tetris_rythm[0])) {
+    if (where_to_start == sizeof(songRythm)/sizeof(songRythm[0])) {
         state = leds_off;
         //where_to_start = 0;
     }

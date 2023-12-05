@@ -13,7 +13,9 @@ int C6 = 1047, D6 = 1175, E6 = 1319, F6 = 1397, G6 = 1568, note_A6 = 1760, B6 = 
 int C7 = 2093, D7 = 2349, E7 = 2637, F7 = 2794, G7 = 3136, note_A7 = 3520, B7 = 3951;
 int C8 = 4186, D8 = 4699, E8 = 5274, F8 = 5588, G8 = 6272, note_A8 = 7040, B8 = 7902;
 
-int tetris_buzzer_1[] = {
+String song_names[] = {"Tetris", "EXSong1", "EXSong2"};
+
+int song_0_notes[] = {
     0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     E5, E5, E5, E5, B4, B4, C5, C5, D5, D5, D5, D5, C5, C5, B4, B4,
     note_A4, note_A4, note_A4,  0, note_A4, note_A4, C5, C5, E5, E5, E5, E5, D5, D5, C5, C5,
@@ -25,21 +27,21 @@ int tetris_buzzer_1[] = {
     D5, D5, D5, D5, E5, E5, E5, E5, C5, C5, C5, C5, note_A4, note_A4, note_A4,  0,
     note_A4, note_A4, note_A4, note_A4
 };
-int tetris_buzzer_2[] = {
-    0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-E5, E5, E6, E6, E5, E5, E6, E6, E5, E5, E6, E6, E5, E5, E6, E6,
-    note_A4, note_A4, note_A5, note_A5, note_A4, note_A4, note_A5, note_A5, note_A4, note_A4, note_A5, note_A5, note_A4, note_A4, note_A5, note_A5,
-    Gsharp4, Gsharp4, Gsharp5, Gsharp5, Gsharp4, Gsharp4, Gsharp5, Gsharp5, Gsharp4, Gsharp4, Gsharp5, Gsharp5, Gsharp4, Gsharp4, Gsharp5, Gsharp5,
-    note_A4, note_A4, note_A5, note_A5, note_A4, note_A4, note_A5, note_A5, note_A4, note_A4, note_A5, note_A5, B5, B5, C6, C6,
+// int tetris_buzzer_2[] = {
+//     0, 0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+// E5, E5, E6, E6, E5, E5, E6, E6, E5, E5, E6, E6, E5, E5, E6, E6,
+//     note_A4, note_A4, note_A5, note_A5, note_A4, note_A4, note_A5, note_A5, note_A4, note_A4, note_A5, note_A5, note_A4, note_A4, note_A5, note_A5,
+//     Gsharp4, Gsharp4, Gsharp5, Gsharp5, Gsharp4, Gsharp4, Gsharp5, Gsharp5, Gsharp4, Gsharp4, Gsharp5, Gsharp5, Gsharp4, Gsharp4, Gsharp5, Gsharp5,
+//     note_A4, note_A4, note_A5, note_A5, note_A4, note_A4, note_A5, note_A5, note_A4, note_A4, note_A5, note_A5, B5, B5, C6, C6,
 
-    D5, D5, D6, D6, D5, D5, D6, D6, D5, D5, D6, D6, D5, D5, D6, D6,
-    D5, D5, D6, D6, C5, C5, C6, C6, C5, C5, C6, C6, C5, C5, C6, C6,
-    C5, C5, C6, C6, C5, C5, C6, C6, Gsharp4, Gsharp4, Gsharp5, Gsharp5, Gsharp4, Gsharp4, Gsharp5, Gsharp5,
-    Gsharp4, Gsharp4, Gsharp5, Gsharp5, Gsharp4, Gsharp4, Gsharp5, Gsharp5, note_A4, note_A4, note_A5, note_A5, note_A4, note_A4, note_A5, note_A5,
-    note_A4, note_A4, note_A5, note_A5, note_A4, note_A4, note_A5, note_A5,
-};
+//     D5, D5, D6, D6, D5, D5, D6, D6, D5, D5, D6, D6, D5, D5, D6, D6,
+//     D5, D5, D6, D6, C5, C5, C6, C6, C5, C5, C6, C6, C5, C5, C6, C6,
+//     C5, C5, C6, C6, C5, C5, C6, C6, Gsharp4, Gsharp4, Gsharp5, Gsharp5, Gsharp4, Gsharp4, Gsharp5, Gsharp5,
+//     Gsharp4, Gsharp4, Gsharp5, Gsharp5, Gsharp4, Gsharp4, Gsharp5, Gsharp5, note_A4, note_A4, note_A5, note_A5, note_A4, note_A4, note_A5, note_A5,
+//     note_A4, note_A4, note_A5, note_A5, note_A4, note_A4, note_A5, note_A5,
+// };
 
-int tetris_rythm[] = {
+int song_0_rythm[] = {
     B00000011, B00000011, B00000011, B00000011, B00110000, B00110000, B00001100, B00001100, B00000011, B00000011, B00000011, B00000011, B00001100, B00001100, B00110000, B00110000,
     B11000000, B11000000, B11000000, B00000000, B11000000, B11000000, B00110000, B00110000, B00000011, B00000011, B00000011, B00000011, B00001100, B00001100, B00110000, B00110000,
     B00110000, B00110000, B00110000, B00000000, B00110000, B00110000, B00110000, B00110000, B00001100, B00001100, B00001100, B00001100, B00000011, B00000011, B00000011, B00000011,

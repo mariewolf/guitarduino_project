@@ -1,20 +1,26 @@
-#ifndef TICK_UPDATELCD_H
-#define TICK_UPDATELCD_H
+#ifndef TICK_UPDATELCD_CPP
+#define TICK_UPDATELCD_CPP
 
 #include "TickFuncs.h"
 #include <LiquidCrystal.h>
 
 const int rs = 45, en = 44, d4 = 47, d5 = 46, d6 = 49, d7 = 48;
+
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
-enum LCD_STATES {LCD_start, LCD_SONG, LCD_READY, LCD_SET, LCD_GO, LCD_GAME_OVER};
+enum LCD_STATES {LCD_start, LCD_SONG_SELECTION, LCD_READY, LCD_SET, LCD_GO, LCD_GAME_OVER};
 int Tick_UPDATE_LCD(int state) {
-  lcd.clear();
+    lcd.clear();
     switch(state) {
         case LCD_start:
-            state = LCD_SONG;
+            state = LCD_SONG_SELECTION;
             break;
-        case LCD_SONG:
-            state = LCD_READY;
+        case LCD_SONG_SELECTION:
+            if (game_over) {
+                state = LCD_SONG_SELECTION;
+            }
+            else {
+                state = LCD_READY;
+            }
             break;
         case LCD_READY:
             state = LCD_SET;
@@ -38,15 +44,20 @@ int Tick_UPDATE_LCD(int state) {
     switch(state) {
         case LCD_start:
             break;
-        case LCD_SONG:
+        case LCD_SONG_SELECTION:
             lcd.setCursor(0, 0);
             lcd.print("Song selected:");
             lcd.setCursor(0, 1);
-            lcd.print("Tetris");
+            lcd.print("<-");
+            lcd.setCursor(5, 1);
+            lcd.print(song_names[selectedSong]); //print song name
+            lcd.setCursor(14, 1);
+            lcd.print("->");
             break;
         case LCD_READY:
             lcd.setCursor(0, 0);
             lcd.print("Ready");
+
             break;
         case LCD_SET:
             lcd.setCursor(0, 0);
@@ -61,6 +72,7 @@ int Tick_UPDATE_LCD(int state) {
             lcd.setCursor(0, 0);
             lcd.print("Game Over");
             ready_to_play = false;
+            game_over = true;
             break;
         default:
             break;
