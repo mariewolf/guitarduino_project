@@ -23,7 +23,10 @@ int Tick_BUZZER(int state) {
             state = buzz_on;
             break;
         case buzz_off:
-            state = buzz_off;
+            song_playing = false;
+            noTone(buzzer_pin);
+            where_to_start = 0;
+            state = buzz_start;
             break;
         default:
             state = buzz_start;
@@ -47,8 +50,6 @@ int Tick_BUZZER(int state) {
                 state = buzz_off;
             break;
         case buzz_off:
-            song_playing = false;
-            noTone(buzzer_pin);
             //noTone(buzzer2_pin);
             break;
         default:

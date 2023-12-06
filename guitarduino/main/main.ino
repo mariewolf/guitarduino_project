@@ -3,6 +3,7 @@
 #include "tick-functions/tick_LEDcontrol.cpp"
 #include "tick-functions/tick_svnseg.cpp"
 #include "tick-functions/tick_updateLCD.cpp"
+#include "tick-functions/tick_joystick.cpp"
 
 int globalPeriod = 2;
 
@@ -13,7 +14,7 @@ typedef struct task {
   int state = 0;          //current state
 } task;
 
-const int num_tasks = 5;
+const int num_tasks = 6;
 task tasks[num_tasks];
 
 void setup() {
@@ -29,6 +30,10 @@ void setup() {
 
     for (auto x : buttons)
       pinMode(x, INPUT);
+
+    pinMode(joystick_button, INPUT_PULLUP);
+    pinMode(joystick_x, INPUT_PULLUP);
+    //pinMode(joystick_y, INPUT_PULLUP);
 
   lc.shutdown(0,false);
   lc.shutdown(1,false);
@@ -63,6 +68,10 @@ void setup() {
   tasks[4].func = &Tick_UPDATE_LCD;
   tasks[4].period = 1000;
   tasks[4].elapsedTime = tasks[4].period;
+
+  tasks[5].func = &Tick_JOYSTICK;
+  tasks[5].period = 150;
+  tasks[5].elapsedTime = tasks[5].period;
 
 }
 

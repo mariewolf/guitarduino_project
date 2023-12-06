@@ -29,13 +29,21 @@ int Tick_UPDATE_LCD(int state) {
             state = LCD_GO;
             break;
         case LCD_GO:
+            ready_to_play = true;
             if (song_playing)
                 state = LCD_GO;
             else
                 state = LCD_GAME_OVER;
             break;
         case LCD_GAME_OVER:
-            state = LCD_GAME_OVER;
+            if (!digitalRead(A10)) {
+                ready_to_play = false;
+                game_over = true;
+                state = LCD_SONG_SELECTION;
+            }
+            else {
+                state = LCD_GAME_OVER;
+            }
             break;
         default:
             state = LCD_start;
@@ -66,13 +74,10 @@ int Tick_UPDATE_LCD(int state) {
         case LCD_GO:
             lcd.setCursor(0, 0);
             lcd.print("Go!");
-            ready_to_play = true;
             break;
         case LCD_GAME_OVER:
             lcd.setCursor(0, 0);
             lcd.print("Game Over");
-            ready_to_play = false;
-            game_over = true;
             break;
         default:
             break;

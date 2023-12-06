@@ -3,21 +3,22 @@
 
 #include "TickFuncs.h"
 
-const int joystick_button = -1, joystick_x = -2, joystick_y = -3; //FIXME: change these to the correct pins
+const int joystick_button = A10, joystick_x = A2;
 
 enum JOYSTICK_STATES {JOYSTICK_wait, JOYSTICK_left, JOYSTICK_right, JOYSTICK_pressed};
 int Tick_JOYSTICK(int state) {
 
-    int x = analogRead(joystick_x);
-    int y = analogRead(joystick_y);
+    int x = analogRead(joystick_x); //read x axis of joystick
+    x = map(x, 0, 1023, 0, 2); 
     int button = digitalRead(joystick_button);
+    static int num_songs = sizeof(song_names)/sizeof(song_names[0]);
 
     switch(state) {
         case JOYSTICK_wait:
-            if (x < 1000) {
-                    state = JOYSTICK_left;
+            if (x == 0) {
+                state = JOYSTICK_left;
                 }
-            else if (x > 3000) {
+            else if (x == 2) {
                 state = JOYSTICK_right;
             }
             else if (button == 0) {
@@ -58,6 +59,7 @@ int Tick_JOYSTICK(int state) {
             state = JOYSTICK_wait;
             break;
     }
+
     switch(state) {
         case JOYSTICK_wait:
             break;
@@ -66,11 +68,11 @@ int Tick_JOYSTICK(int state) {
                 selectedSong--;
             }
             else {
-                selectedSong = sizeof(song_names)/sizeof(song_names[0]) - 1;
+                selectedSong = num_songs - 1;
             }
             break;
         case JOYSTICK_right:
-            if (selectedSong < sizeof(song_names)/sizeof(song_names[0]) - 1) {
+            if (selectedSong < num_songs - 1) {
                 selectedSong++;
             }
             else {
@@ -83,19 +85,20 @@ int Tick_JOYSTICK(int state) {
             state = JOYSTICK_wait;
             break;
     }
-    switch(state) {
-        case JOYSTICK_wait:
-            break;
-        case JOYSTICK_left:
-            if (selectedSong > 0) {
-                selectedSong--;
-            }
-            break;
-        case JOYSTICK_right:
-            if (selectedSong < 3) {
-                selectedSong++;
-            }
-    }
+
+    // Serial.print("button: ");
+    // Serial.print(button);
+    // Serial.print("\tx: ");
+    // Serial.print(x);
+    // Serial.print("\tselected song: ");
+    // Serial.print(selectedSong);
+    // Serial.print("\tnum songs: ");
+    // Serial.print(num_songs);
+    // Serial.print("\n");
+
+    return state;
+    
+
 }
 
 #endif
