@@ -23,7 +23,8 @@ int Tick_BUZZER(int state) {
             state = buzz_on;
             break;
         case buzz_off:
-            song_playing = false;
+            playing = false;
+            ready_to_play = false;
             noTone(buzzer_pin);
             where_to_start = 0;
             state = buzz_start;
@@ -36,7 +37,7 @@ int Tick_BUZZER(int state) {
         case buzz_start:
             break;
         case buzz_on:
-            song_playing = true;
+            playing = true;
             if (correct_press) {
               tone(buzzer_pin, songNotes[where_to_start]);
               //tone(buzzer2_pin, tetris_buzzer_2[where_to_start]);
@@ -46,7 +47,7 @@ int Tick_BUZZER(int state) {
               //noTone(buzzer2_pin);
             }
             where_to_start++;
-            if (where_to_start == sizeof(songNotes)/sizeof(songNotes[0]))
+            if (where_to_start == songSize)
                 state = buzz_off;
             break;
         case buzz_off:

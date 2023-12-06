@@ -54,21 +54,27 @@ int Tick_LED_ROW_CONTROL(int state) {
 
     switch(state) {
         case LED_ROW_CONTROL_start:
-            if (ready_to_play) {
+            if (playing) {
                 state = shift_down;
             }
             else {
                 state = LED_ROW_CONTROL_start;
             }
+            //Serial.println("LED ROW CONTROL START");
             break;
         case shift_down:
             state = shift_down;
+            //Serial.println("LED ROW CONTROL SHIFT DOWN");
             break;
+
         case leds_off:
             state = leds_off;
+            //Serial.println("LED ROW CONTROL LEDS OFF");
             break;
+
         default:
             state = LED_ROW_CONTROL_start;
+            //Serial.println("LED ROW CONTROL DEFAULT");
             break;
     }
     switch(state) {
@@ -86,8 +92,12 @@ int Tick_LED_ROW_CONTROL(int state) {
         default:
             break;
     }
-    if (where_to_start == sizeof(songRythm)/sizeof(songRythm[0])) {
-        state = leds_off;
+    if (where_to_start > (songSize - 1)) {
+        where_to_start = 0;
+        lc.setRow(0,0,B00000000);
+        byte LEDrows[16] = {B00000000, B00000000, B00000000, B00000000, B00000000, B00000000, B00000000, B00000000, 
+                B00000000, B00000000, B00000000, B00000000, B00000000, B00000000, B00000000, B00000000};
+        state = LED_ROW_CONTROL_start;
         //where_to_start = 0;
     }
 
@@ -108,6 +118,7 @@ int Tick_LED_ROW_CONTROL(int state) {
     //lc.setRow(1,6,LEDrows[14]);
     lc.setRow(1,6,B11111111);
     lc.setRow(1,7,LEDrows[15]);
+
 
     return state;
 }

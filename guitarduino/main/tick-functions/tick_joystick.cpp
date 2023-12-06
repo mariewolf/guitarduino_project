@@ -22,8 +22,23 @@ int Tick_JOYSTICK(int state) {
                 state = JOYSTICK_right;
             }
             else if (button == 0) {
-                game_over = false;
                 state = JOYSTICK_pressed;
+                if (selectedSong == 0) {
+                    songNotes = song_0_notes;
+                    songRythm = song_0_rythm;
+                    songSize = sizeof(song_0_notes)/sizeof(song_0_notes[0]);
+                }
+                else if (selectedSong == 1) {
+                    songNotes = song_1_notes;
+                    songRythm = song_1_rythm;
+                    songSize = sizeof(song_1_notes)/sizeof(song_1_notes[0]);
+                }
+                else if (selectedSong == 2) {
+                    songNotes = song_2_notes;
+                    songRythm = song_2_rythm;
+                    songSize = sizeof(song_2_notes)/sizeof(song_2_notes[0]);
+                }
+                
             }
             else {
                 state = JOYSTICK_wait;
@@ -36,23 +51,11 @@ int Tick_JOYSTICK(int state) {
                 state = JOYSTICK_wait;
             break;
         case JOYSTICK_pressed:
-                if (game_over) {
+                if (ready_to_play) {
                     state = JOYSTICK_wait;
                 }
                 else {
                     state = JOYSTICK_pressed;
-                    if (selectedSong == 0) {
-                        songNotes = song_0_notes;
-                        songRythm = song_0_rythm;
-                    }
-                    else if (selectedSong == 1) {
-                        songNotes = song_1_notes;
-                        songRythm = song_1_rythm;
-                    }
-                    else if (selectedSong == 2) {
-                        songNotes = song_2_notes;
-                        songRythm = song_2_rythm;
-                    }
                 }
             break;
         default:

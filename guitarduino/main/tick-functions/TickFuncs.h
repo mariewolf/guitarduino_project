@@ -10,12 +10,14 @@ int check_button_press(int pin);
 
 int count = 0;
 bool correct_press = true;
-bool song_playing = false;
+
+bool playing = false;
 bool ready_to_play = false;
-bool game_over = true;
+
 int selectedSong = 0;
 int* songNotes = song_0_notes;
 int* songRythm = song_0_rythm;
+int songSize = 0;
 
 void Test() {
         //int b1 = digitalRead(A3);
